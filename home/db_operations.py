@@ -2,13 +2,39 @@ import mysql.connector
 import random 
 
 
-def gen_id():
-    return random.randint(0, 10000)
-
-
 def db_connect():
     conn = mysql.connector.connect(host="localhost", user="root", password="Anmol@1234")
     return conn
+
+
+def if_exists(text_id):
+    conn = db_connect()
+    cursor = conn.cursor()
+    cursor.execute('USE PasteBin')
+    cursor.execute(f'SELECT EXISTS(SELECT * FROM LINKS WHERE id="{text_id}")')
+    res = cursor.fetchall()[0][0]
+    return res
+
+
+def gen_id():
+    while True:
+        with open('nouns.txt') as f:
+            nouns = f.readlines()
+
+        nouns = [noun.strip('\n').capitalize() for noun in nouns]
+
+        with open('adjs.txt') as f:
+            adjs = f.readlines()
+
+        adjs = [adj.strip('\n').capitalize() for adj in adjs]
+
+        text_id = random.choice(nouns)+random.choice(adjs)
+
+        if not if_exists(text_id):
+            return text_id
+
+
+
 
 
 def create_database(name):
@@ -76,12 +102,12 @@ def add_to_database(text, table_name="LINKS", db_name="PasteBin"):
 
 
 def main():
-    create_database("PasteBin")
-    create_table()
-    
-    add_to_database("Anmol")
-    get_results()
-
+    # create_database("PasteBin")
+    # create_table()
+    #
+    # add_to_database("Anmol")
+    # get_results()
+    gen_id()
 
 if __name__ == '__main__':
     main()

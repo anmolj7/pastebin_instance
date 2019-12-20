@@ -6,5 +6,5 @@ urlpatterns = [
     path('', home),
     path('save_text', save_text),
     path('get_texts', get_texts),
-    path('view_paste/<int:text_id>', view_paste),
+    path('view_paste/<str:text_id>', view_paste),
 ]
